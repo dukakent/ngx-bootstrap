@@ -13,9 +13,12 @@ export class BsDatepickerActions {
   static readonly SELECT = '[datepicker] select date';
   static readonly NAVIGATE_OFFSET = '[datepicker] shift view date';
   static readonly NAVIGATE_TO = '[datepicker] change view date';
-  static readonly RENDER_OPTIONS = '[datepicker] update render options';
+  static readonly SET_OPTIONS = '[datepicker] update render options';
   static readonly HOVER = '[datepicker] hover date';
   static readonly CHANGE_VIEWMODE = '[datepicker] switch view mode';
+
+  static readonly SET_MIN_DATE = '[datepicker] set min date';
+  static readonly SET_MAX_DATE = '[datepicker] set max date';
 
   static readonly SELECT_RANGE = '[daterangepicker] select dates range';
 
@@ -53,9 +56,9 @@ export class BsDatepickerActions {
     };
   }
 
-  renderOptions(options: DatepickerRenderOptions): Action {
+  setOptions(options: DatepickerRenderOptions): Action {
     return {
-      type: BsDatepickerActions.RENDER_OPTIONS,
+      type: BsDatepickerActions.SET_OPTIONS,
       payload: options
     };
   }
@@ -72,6 +75,20 @@ export class BsDatepickerActions {
     return {
       type: BsDatepickerActions.HOVER,
       payload: event.isHovered ? event.day.date : null
+    };
+  }
+
+  minDate(date: Date): Action {
+    return {
+      type: BsDatepickerActions.SET_MIN_DATE,
+      payload: date
+    };
+  }
+
+  maxDate(date: Date): Action {
+    return {
+      type: BsDatepickerActions.SET_MAX_DATE,
+      payload: date
     };
   }
 }

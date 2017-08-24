@@ -4,12 +4,27 @@ import {
   DaysCalendarViewModel, MonthsCalendarViewModel,
   MonthViewOptions, YearsCalendarViewModel
 } from '../models/index';
-import { defaultFormatOptions, defaultMonthOptions, defaultRenderOptions } from './_defaults';
+import { defaultMonthOptions } from './_defaults';
+import { BsDatepickerConfig } from '../bs-datepicker.config';
 
-export class BsDatepickerState {
+export interface BsDatepickerViewState {
+  date: Date;
+  mode: BsDatepickerViewMode;
+}
+
+export class BsDatepickerState implements DatepickerRenderOptions, DatepickerFormatOptions {
+  // date picker
+  selectedDate?: Date;
+  // daterange picker
+  selectedRange?: Date[];
+
   // initial date of calendar, today by default
-  viewDate: Date;
-  viewMode: BsDatepickerViewMode;
+  view: BsDatepickerViewState;
+
+  // bounds
+  minDate?: Date;
+  maxDate?: Date;
+
   hoveredDate?: Date;
   hoveredMonth?: Date;
   hoveredYear?: Date;
@@ -29,20 +44,27 @@ export class BsDatepickerState {
 
   // options
   monthViewOptions: MonthViewOptions;
-  formatOptions: DatepickerFormatOptions;
-  renderOptions: DatepickerRenderOptions;
 
-  // date picker
-  selectedDate?: Date;
-  // daterange picker
-  selectedRange?: Date[];
+  // DatepickerRenderOptions
+  showWeekNumbers?: boolean;
+  displayMonths?: number;
+
+  // DatepickerFormatOptions
+  locale: string;
+
+  monthTitle: string;
+  yearTitle: string;
+
+  dayLabel: string;
+  monthLabel: string;
+  yearLabel: string;
+
+  weekNumbers: string;
 }
 
-export const initialDatepickerState: BsDatepickerState = {
-  viewDate: new Date(),
-  viewMode: 'day',
-  selectedRange: [],
-  monthViewOptions: defaultMonthOptions,
-  formatOptions: defaultFormatOptions,
-  renderOptions: defaultRenderOptions
-};
+export const initialDatepickerState: BsDatepickerState = Object.assign(
+  new BsDatepickerConfig(), {
+    view: {date: new Date(), mode: 'day'} as BsDatepickerViewState,
+    selectedRange: [],
+    monthViewOptions: defaultMonthOptions
+  });

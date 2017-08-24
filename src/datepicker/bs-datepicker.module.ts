@@ -5,7 +5,6 @@ import { BsDatepickerStore } from './reducer/bs-datepicker.store';
 import { BsDatepickerContainerComponent } from './themes/bs/bs-datepicker-container.component';
 import { BsDatepickerNavigationViewComponent } from './themes/bs/bs-datepicker-navigation-view.component';
 import { BsDaysCalendarViewComponent } from './themes/bs/bs-days-calendar-view.component';
-import { BsDatepickerConfig } from './bs-datepicker-config';
 import { BsDatepickerEffects } from './reducer/bs-datepicker.effects';
 import { BsDaterangepickerContainerComponent } from './themes/bs/bs-daterangepicker-container.component';
 import { BsDaterangepickerComponent } from './bs-daterangepicker.component';
@@ -18,6 +17,7 @@ import { BsYearsCalendarViewComponent } from './themes/bs/bs-years-calendar-view
 import { BsCustomDatesViewComponent } from './themes/bs/bs-custom-dates-view.component';
 import { BsCurrentDateViewComponent } from './themes/bs/bs-current-date-view.component';
 import { BsTimepickerViewComponent } from './themes/bs/bs-timepicker-view.component';
+import { BsDatepickerConfig } from './bs-datepicker.config';
 
 @NgModule({
   imports: [CommonModule],

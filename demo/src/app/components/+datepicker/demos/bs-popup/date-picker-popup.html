@@ -1,6 +1,8 @@
 <pre>{{bsValue}}</pre>
 <input type="text"
        value="{{ bsValue | date:'yMd'}}"
+       [minDate]="minDate"
+       [maxDate]="maxDate"
        bsDatepicker [(bsValue)]="bsValue">
 <span style="display: inline-block">
   <button class="btn btn-success" (click)="dp.toggle()">Date Picker popup</button>

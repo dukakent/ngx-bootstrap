@@ -1,7 +1,10 @@
 import { DayViewModel, DaysCalendarViewModel, WeekViewModel } from '../models/index';
-import { isSameMonth } from '../../bs-moment/utils/date-getters';
+import { isSameDay, isSameMonth } from '../../bs-moment/utils/date-getters';
+import { isSameOrAfter, isSameOrBefore } from '../../bs-moment/utils/date-compare';
 
 export interface FlagDaysCalendarOptions {
+  minDate: Date;
+  maxDate: Date;
   hoveredDate: Date;
   selectedDate: Date;
   selectedRange: Date[];
@@ -17,15 +20,19 @@ export function flagDaysCalendar(formattedMonth: DaysCalendarViewModel,
         // datepicker
         const isOtherMonth = !isSameMonth(day.date, formattedMonth.month);
 
-        const isHovered = !isOtherMonth && isSameDate(day.date, options.hoveredDate);
+        const isHovered = !isOtherMonth && isSameDay(day.date, options.hoveredDate);
         // date range picker
-        const isSelectionStart = !isOtherMonth && isSameDate(day.date, options.selectedRange[0]);
-        const isSelectionEnd = !isOtherMonth && isSameDate(day.date, options.selectedRange[1]);
+        const isSelectionStart = !isOtherMonth && isSameDay(day.date, options.selectedRange[0]);
+        const isSelectionEnd = !isOtherMonth && isSameDay(day.date, options.selectedRange[1]);
 
-        const isSelected = !isOtherMonth && isSameDate(day.date, options.selectedDate) ||
+        const isSelected = !isOtherMonth && isSameDay(day.date, options.selectedDate) ||
           isSelectionStart || isSelectionEnd;
 
         const isInRange = !isOtherMonth && isDateInRange(day.date, options.selectedRange, options.hoveredDate);
+
+        const isDisabled = isSameOrBefore(day.date, options.minDate, 'day')
+          || isSameOrAfter(day.date, options.maxDate, 'day');
+
         // decide update or not
         const newDay = Object.assign(/*{},*/ day, {
           isOtherMonth,
@@ -33,7 +40,8 @@ export function flagDaysCalendar(formattedMonth: DaysCalendarViewModel,
           isSelected,
           isSelectionStart,
           isSelectionEnd,
-          isInRange
+          isInRange,
+          isDisabled
         });
 
         if (day.isOtherMonth !== newDay.isOtherMonth ||
@@ -41,6 +49,7 @@ export function flagDaysCalendar(formattedMonth: DaysCalendarViewModel,
           day.isSelected !== newDay.isSelected ||
           day.isSelectionStart !== newDay.isSelectionStart ||
           day.isSelectionEnd !== newDay.isSelectionEnd ||
+          day.isDisabled !== newDay.isDisabled ||
           day.isInRange !== newDay.isInRange) {
           week.days[dayIndex] = newDay;
         }
@@ -54,16 +63,6 @@ export function flagDaysCalendar(formattedMonth: DaysCalendarViewModel,
     && (options.monthIndex + 1) !== options.displayMonths;
 
   return formattedMonth;
-}
-
-function isSameDate(date: Date, selectedDate: Date): boolean {
-  if (!date || !selectedDate) {
-    return false;
-  }
-
-  return date.getFullYear() === selectedDate.getFullYear()
-    && date.getMonth() === selectedDate.getMonth()
-    && date.getDate() === selectedDate.getDate();
 }
 
 function isDateInRange(date: Date, selectedRange: Date[], hoveredDate: Date): boolean {

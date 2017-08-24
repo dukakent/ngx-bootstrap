@@ -113,20 +113,13 @@ export class BsDaterangepickerContainerComponent implements OnInit {
     this.yearsCalendar = this._bsDatepickerStore.select(state => state.yearsCalendarFlagged)
       .filter(years => !!years);
 
-    this.options = this._bsDatepickerStore.select(state => state.renderOptions)
-      .filter(options => !!options);
-
-    this.viewMode = this._bsDatepickerStore.select(state => state.viewMode);
+    this.viewMode = this._bsDatepickerStore.select(state => state.view.mode);
 
     // set render options
-    this._bsDatepickerStore.dispatch(this._actions.renderOptions({
+    this._bsDatepickerStore.dispatch(this._actions.setOptions({
       displayMonths: 2,
       showWeekNumbers: true
     }));
-
-    // recalculate on view mode change
-    this._bsDatepickerStore.select(state => state.viewMode)
-      .subscribe(() => this._bsDatepickerStore.dispatch(this._actions.calculate()));
 
     // on selected date change
     this._bsDatepickerStore.select(state => state.selectedRange)
@@ -135,7 +128,7 @@ export class BsDaterangepickerContainerComponent implements OnInit {
     // TODO: extract effects
     // calculate month model on view model change
     this._bsDatepickerStore
-      .select(state => state.viewDate)
+      .select(state => state.view)
       .subscribe(() => this._bsDatepickerStore.dispatch(this._actions.calculate()));
 
     // format calendar values on month model change
@@ -187,11 +180,9 @@ export class BsDaterangepickerContainerComponent implements OnInit {
     }
 
     if (this._rangeStack.length === 1) {
-      if (day.date >= this._rangeStack[0]) {
-        this._rangeStack = [this._rangeStack[0], day.date];
-      } else {
-        this._rangeStack = [day.date];
-      }
+      this._rangeStack = day.date >= this._rangeStack[0]
+        ? [this._rangeStack[0], day.date]
+        : [day.date];
     }
 
     if (this._rangeStack.length === 0) {
